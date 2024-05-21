@@ -11,9 +11,8 @@ class RegistrationForm extends Component {
     formSubmitted: false,
   }
 
-  submitForm = event => {
+  onBlurName = () => {
     const {firstName, lastName} = this.state
-    event.preventDefault()
 
     if (firstName === '') {
       this.setState({showErrorFirstName: true})
@@ -26,6 +25,13 @@ class RegistrationForm extends Component {
     } else {
       this.setState({showErrorLastName: false})
     }
+  }
+
+  submitForm = event => {
+    const {firstName, lastName} = this.state
+    event.preventDefault()
+
+    this.onBlurName()
 
     if (firstName !== '' && lastName !== '') {
       this.setState({formSubmitted: true})
@@ -40,22 +46,6 @@ class RegistrationForm extends Component {
     this.setState({lastName: event.target.value})
   }
 
-  onBlurEvent = () => {
-    const {firstName, lastName} = this.state
-
-    if (firstName === '') {
-      this.setState({showErrorFirstName: true})
-    } else {
-      this.setState({showErrorFirstName: false})
-    }
-
-    if (lastName === '') {
-      this.setState({showErrorLastName: true})
-    } else {
-      this.setState({showErrorLastName: false})
-    }
-  }
-
   renderForm = () => {
     const {
       firstName,
@@ -66,10 +56,6 @@ class RegistrationForm extends Component {
 
     const ErrorFirstNameClass = showErrorFirstName ? 'colorInputField' : ''
     const ErrorLastNameClass = showErrorLastName ? 'colorInputField' : ''
-    const ErrorFirstName = showErrorFirstName
-      ? 'display-element'
-      : 'hide-element'
-    const ErrorLastName = showErrorLastName ? 'display-element' : 'hide-element'
 
     return (
       <form className="form-container" onSubmit={this.submitForm}>
@@ -82,9 +68,9 @@ class RegistrationForm extends Component {
           className={`input ${ErrorFirstNameClass}`}
           value={firstName}
           onChange={this.onChangeFirstName}
-          onBlur={this.onBlurEvent}
+          onBlur={this.onBlurName}
         />
-        <p className={`paragraph ${ErrorFirstName}`}>Required</p>
+        {ErrorFirstNameClass && <p className="paragraph">Required</p>}
         <label className="label" htmlFor="lastName">
           LAST NAME
         </label>
@@ -94,9 +80,9 @@ class RegistrationForm extends Component {
           className={`input ${ErrorLastNameClass}`}
           value={lastName}
           onChange={this.onChangeLastName}
-          onBlur={this.onBlurEvent}
+          onBlur={this.onBlurName}
         />
-        <p className={`paragraph ${ErrorLastName}`}>Required</p>
+        {ErrorLastNameClass && <p className="paragraph">Required</p>}
         <div className="button-container">
           <button type="submit" className="button">
             submit
